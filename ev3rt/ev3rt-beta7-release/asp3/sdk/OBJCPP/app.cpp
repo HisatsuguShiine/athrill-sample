@@ -384,7 +384,6 @@ void main_task(intptr_t unused) {
 #endif
     char d_msg[64];
     syslog(LOG_NOTICE, "#### motor control start");
-//    syslog(LOG_NOTICE, "#### motor control start LINE=%d", __LINE__);
     while(1) {
 
     /**
@@ -406,7 +405,6 @@ void main_task(intptr_t unused) {
         static float lasterror = 0, integral = 0;
         static float midpoint = (white - black) / 2 + black;
         {
-            //syslog(LOG_NOTICE, "#### motor control LINE=%d", __LINE__);
             //float error = midpoint - ev3_color_sensor_get_reflect(EV3_PORT_1);
             float error = midpoint - colorSensor->getBrightness();
 #ifdef LIGHT_BRIGHT
@@ -418,7 +416,6 @@ void main_task(intptr_t unused) {
 #endif
 
             //ev3_motor_steer(left_motor, right_motor, 10, steer);
-
             // The following processing is used to divert 'ev3_motor_steer'
             int power;
             int turn_ratio;
@@ -433,9 +430,13 @@ void main_task(intptr_t unused) {
             if (abs_turn_ratio > 100) {
                 abs_turn_ratio = 100;
             }
+
+            if (abs_power > 100) {
+                abs_power = 100;
+            }
             
-            left_power = 10;
-            right_power = 10;
+            left_power = abs_power;
+            right_power = abs_power;
 
             if (turn_ratio > 0) {
                 right_power = (abs_power * (100 - abs_turn_ratio))  / 100 ;
@@ -452,7 +453,6 @@ void main_task(intptr_t unused) {
             rightMotor->setPWM(right_power);          
             // The above processing diverts The 'ev3_motor_steer'
 
-            //syslog(LOG_NOTICE, "#### motor control LINE=%d steer=%d", __LINE__, steer);
             lasterror = error;
         }
         tslp_tsk(100000); /* 100msec */

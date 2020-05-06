@@ -205,7 +205,7 @@ APPL_LIBS =  -nostartfiles  -lnosys
 APPL_DIRS := $(APPLDIRS) $(SRCDIR)/library
 APPL_ASMOBJS :=
 ifdef USE_CXX
-	APPL_CXXOBJS := app.o #Clock.o ColorSensor.o GyroSensor.o Motor.o SonarSensor.o Steering.o TouchSensor.o
+	APPL_CXXOBJS := app.o
 	APPL_COBJS :=
 else
 	APPL_COBJS := app.o
@@ -218,7 +218,6 @@ APPL_COBJS += brick_dri.o
 APPL_COBJS += uart_dri.o
 APPL_COBJS += motor_dri.o
 APPL_COBJS += gpio_dri.o
-APPL_CXXOBJS += Clock.o ColorSensor.o GyroSensor.o Motor.o SonarSensor.o Steering.o TouchSensor.o
 
 APPL_CFLAGS := $(APPL_CFLAGS)
 ifdef APPLDIRS
@@ -226,10 +225,10 @@ ifdef APPLDIRS
 endif
 
 
-#ifdef USE_CXX
-#EV3RT_SDK_LIB_DIR       := ../common/library
-#include ../common/library/libcpp-ev3/Makefile
-#endif
+ifdef USE_CXX
+EV3RT_SDK_LIB_DIR       := ../common/library
+include ../common/library/libcpp-ev3/Makefile.asplib
+endif
 
 EV3RT_SDK_API_DIR	:= ../common/ev3api
 include ../common/ev3api/Makefile
